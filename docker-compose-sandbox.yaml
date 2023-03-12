@@ -1,0 +1,50 @@
+version: '3.9'
+x-logging:
+  &default-logging
+  options:
+    max-size: '10m'
+    max-file: '1'
+  driver: json-file
+
+services:
+  data-collector-api:
+    container_name: data-collector-api
+    restart: unless-stopped
+    build:
+      context: ./data-collector-api
+      dockerfile: Dockerfile.CollectorAPI
+      args:
+        BUILD_ENV: ''
+    ports:
+      - "8080:8080"
+    environment:
+      KAFKA_PASSWORD: ${KAFKA_PASSWORD}
+    logging: *default-logging
+  data-retrieve-api:
+    container_name: data-retrieve-api
+    restart: unless-stopped
+    build:
+      context: ./data-retrieve-api
+      dockerfile: Dockerfile.RetrieveAPI
+      args:
+        BUILD_ENV: ''
+    ports:
+      - "8081:8080"
+    logging: *default-logging
+  data-sink-mongodb:
+    container_name: data-sink-mongodb
+    restart: unless-stopped
+    build:
+      context: ./data-sink-mongodb
+      dockerfile: Dockerfile.SinkMongoDB
+      args:
+        BUILD_ENV: ''
+    ports:
+      - "8082:8080"
+    environment:
+      KAFKA_PASSWORD: ${KAFKA_PASSWORD}
+    logging: *default-logging
+
+networks:
+  default:
+    name: ${SANDBOX_PROJECT}

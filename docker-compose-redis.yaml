@@ -1,0 +1,33 @@
+version: '3.9'
+x-logging:
+  &default-logging
+  options:
+    max-size: '10m'
+    max-file: '1'
+  driver: json-file
+
+services:
+  redis-db:
+    container_name: redis-db
+    image: redis:7.0.3-alpine3.16
+    #command:
+    #- /bin/sh
+    #- -c
+    ## - Double dollars, so that the variable is not expanded by Docker Compose
+    ## - Surround by quotes, so that the shell does not split the password
+    ## - The ${variable:?message} syntax causes shell to exit with a non-zero
+    ##   code and print a message, when the variable is not set or empty
+    #- redis-server --appendonly "yes" --requirepass "${REDIS_PASSWORD:-mypassword}"
+    command: ["redis-server", "--appendonly", "yes"]
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    logging: *default-logging
+
+networks:
+  default:
+    name: ${SANDBOX_PROJECT}
+volumes:
+  redis-data: {}

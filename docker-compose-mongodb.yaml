@@ -1,0 +1,25 @@
+version: '3.9'
+x-logging:
+  &default-logging
+  options:
+    max-size: '10m'
+    max-file: '1'
+  driver: json-file
+
+services:
+  mongo-db:
+    container_name: mongo-db
+    image: mongo:5.0.15
+    command: mongod --dbpath /data/db --port 27017
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    logging: *default-logging
+
+networks:
+  default:
+    name: ${SANDBOX_PROJECT}
+volumes:
+  mongo-data: {}
