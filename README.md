@@ -15,15 +15,15 @@ data-sink-mongodb (java spring boot microservice)
 ```
 #### Please wait for a while because of the kafka first initialization
 ## Docker containers
-|IMAGE| PORTS                  |NAME|
-|---|------------------------|---|
-|docker-dev-data-collector-api| 0.0.0.0:8080->8080/tcp |data-collector-api|
-|docker-dev-data-retrieve-api| 0.0.0.0:8081->8080/tcp |data-retrieve-api|
-|docker-dev-data-sink-mongodb| 0.0.0.0:8082->8080/tcp |data-sink-mongodb|
-|mongo:5.0.15| 0.0.0.0:27017->27017/tcp |mongo-db|
-|obsidiandynamics/kafdrop:latest| 0.0.0.0:9000->9000/tcp |kafdrop|
-|bitnami/kafka:3.2.1|  0.0.0.0:9091-9092->9091-9092/tcp |kafka|
-|bitnami/zookeeper:3.8|  2888/tcp, 3888/tcp, 0.0.0.0:2181->2181/tcp, 8080/tcp |zookeeper|
+| IMAGE                           | PORTS                                                | NAME                |
+|---------------------------------|------------------------------------------------------|---------------------|
+| docker-dev-data-collector-api   | 0.0.0.0:8080->8080/tcp                               | data-collector-api  |
+| docker-dev-data-retrieve-api    | 0.0.0.0:8081->8080/tcp                               | data-retrieve-api   |
+| docker-dev-data-sink-mongodb    | 0.0.0.0:8082->8080/tcp                               | data-sink-mongodb   |
+| mongo:5.0.15                    | 0.0.0.0:27017->27017/tcp                             | mongo-db            |
+| obsidiandynamics/kafdrop:latest | 0.0.0.0:9000->9000/tcp                               | kafdrop             |
+| bitnami/kafka:3.2.1             | 0.0.0.0:9091-9092->9091-9092/tcp                     | kafka               |
+| bitnami/zookeeper:3.8           | 2888/tcp, 3888/tcp, 0.0.0.0:2181->2181/tcp, 8080/tcp | zookeeper           |
 
 ## Rebuild sandbox or other dependency
 ```
@@ -48,6 +48,19 @@ visit http://localhost:9000/ to see admin UI
 ```
 ## Sequence Diagram
 ![alt text](s8DataFlow.png "Sequence")
+
+## Database Schema
+#### Database name: Customer
+#### Collection name: transaction
+| Field       | Type   | Description                                | Example                               |
+|-------------|--------|--------------------------------------------|---------------------------------------|
+| uId         | String | Unique ID                                  | 89d3o179-abcd-465b-o9ee-e2d5f6ofEld46 |
+| money       | Object | Transaction money amount with currency     | {"amount": 1220, "currency": "CHF"}   |
+| IBAN        | String | Account IBAN                               | CH93-0000-0000-0000-0000-0            |
+| date        | String | Transaction date (dd-MM-yyyy)              | 01-10-2020                            |
+| timestamp   | Long   | UTC timestamp for date (hidden, sort used) | 1601510400                            |
+| description | String | Transaction description                    | Online payment CHF                    |
+
 
 ## Try API
 ### Insert transaction data
